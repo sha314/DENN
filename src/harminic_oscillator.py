@@ -97,11 +97,7 @@ def test(epoch=1000):
     model.set_variable_order(['t'])
     y0, v0 = 1.0, 0.0
 
-    lb = np.array([0], dtype=np.float32)
-    ub = np.array([10], dtype=np.float32)
-
-    model.set_boundary(lb, ub)
-
+    # set lower and upper bound of independent variable
     lb, ub = [0], [10]
     model.set_boundary(lb, ub)
 
@@ -109,13 +105,13 @@ def test(epoch=1000):
     model.set_data_manager(d_manager)
     model.set_training_data_size(5000)
 
-    a = DataManager.generate_uniform_s([0], [5], 100)
-    b = DataManager.generate_uniform_s([5], [10], 100)
+    # a = DataManager.generate_uniform_s([0], [5], 100)
+    # b = DataManager.generate_uniform_s([5], [10], 100)
     # model.set_training_data([a, b])
     # model.set_steep_density(0.65)
     model.info()
     # model.train(epoch, interval=200, batch_size=100, generate_data=True, rar=True)
-    model.train(epoch, interval=500, batch_size=512, rar=0.4)
+    model.train(epoch, interval=2000, batch_size=2048, rar=0.4)
 
     signature = model.get_classname()
     print(signature)
@@ -172,5 +168,5 @@ def test(epoch=1000):
 
 
 if __name__ == "__main__":
-    test(5_000)
+    test(2_000*5)
     # test_straight_line()
