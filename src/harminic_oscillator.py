@@ -159,7 +159,7 @@ def test(epoch=1000,interval=500, batch_size=256):
     axs[3].ticklabel_format(axis="x", style="sci", scilimits=(0,0))
 
     # plt.show()
-    filename = "APLv10_oscillator_high_freq{}.png".format(6)
+    filename = "./tmp/APLv10_oscillator_high_freq{}.png".format(6)
     plt.savefig(filename)
 
 
