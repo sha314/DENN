@@ -42,6 +42,14 @@ class APL_v11:
         self.d_manager = None
         self.steep_density = 0.3  # 30% data comes from steep region
         self.dtype = np.float32
+
+        # For tensorboard logs
+        import datetime
+        current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        train_log_dir = 'logs/' + current_time + '/train'
+        test_log_dir = 'logs/' + current_time + '/test'
+        self.train_summary_writer = tf.summary.create_file_writer(train_log_dir)
+        self.test_summary_writer = tf.summary.create_file_writer(test_log_dir)
         pass
 
     @staticmethod
@@ -378,7 +386,7 @@ class APL_v11:
         for e in tf.range(num_interval):
             self.one_interval(interval)
             self.epoch += interval
-            interval_time = self.after_each_interval(self.epoch, generate_data, interval_time, rar)
+            interval_time = self.after_each_interval_v2(self.epoch, generate_data, interval_time, rar)
 
             # self.optimizer.minimize(self.loss_function, var_list=self.nnet.weights)
             # X_batch = self.get_batch_data()  # for batch training.
@@ -408,6 +416,28 @@ class APL_v11:
         tf.print("Iteration ", e, ". Elapsed time ", APL_v11.get_elapsed_time(interval_time), " => loss ", loss)
 
         self.history.append([self.epoch, loss])
+        if generate_data:
+            self.set_data_external(rar)
+            pass
+        return time.time()
+    
+    def after_each_interval_v2(self, e, generate_data, interval_time, rar):
+        """
+        incorporates tensorboard, so that you can see the live progress.
+        TODO: Maybe save model parameters as well ?
+        """
+        loss = self.loss_function().numpy()
+        tf.print("Iteration ", e, ". Elapsed time ", APL_v11.get_elapsed_time(interval_time), " => loss ", loss)
+
+        self.history.append([self.epoch, loss])
+
+        with self.train_summary_writer.as_default():
+            tf.summary.scalar('loss', loss, step=self.epoch)
+
+        # with self.test_summary_writer.as_default():
+        #     tf.summary.scalar('loss', test_loss.result(), step=epoch)
+
+            
         if generate_data:
             self.set_data_external(rar)
             pass

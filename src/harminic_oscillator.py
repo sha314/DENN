@@ -87,7 +87,7 @@ class Oscillator(APL):
 
 import numpy as np
 
-def test(epoch=1000):
+def test(epoch=1000,interval=500, batch_size=256):
     a = 20
     layers = [1, a, a, 1]
 
@@ -111,7 +111,7 @@ def test(epoch=1000):
     # model.set_steep_density(0.65)
     model.info()
     # model.train(epoch, interval=200, batch_size=100, generate_data=True, rar=True)
-    model.train(epoch, interval=2000, batch_size=2048, rar=0.4)
+    model.train(epoch, interval, batch_size, rar=0.4)
 
     signature = model.get_classname()
     print(signature)
@@ -168,5 +168,5 @@ def test(epoch=1000):
 
 
 if __name__ == "__main__":
-    test(2_000*5)
+    test(2_000*5, 500, 128)
     # test_straight_line()
